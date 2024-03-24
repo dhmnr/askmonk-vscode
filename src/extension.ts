@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 function getAnswer(question: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        exec(`python3 script.py "${question}"`, (error, stdout, stderr) => {
+        exec(`askmonk "${question}"`, (error, stdout, stderr) => {
             if (error) {
                 reject(`Error: ${error.message}`);
                 return;
