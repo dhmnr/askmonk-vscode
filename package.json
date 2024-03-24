@@ -9,30 +9,32 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:longAnswerHelperView"
+  ],
   "contributes": {
-    "views": {
-      "myBookContainer": [
-        {
-          "id": "myBookView",
-          "name": "My Book View"
-        }
-      ]
-    },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "myBookContainer",
-          "title": "My Book",
+          "id": "longAnswerHelper",
+          "title": "Long Answer Helper",
           "icon": "images/book-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "longAnswerHelper": [
+        {
+          "id": "longAnswerHelperView",
+          "name": "Long Answer Helper"
         }
       ]
     },
     "commands": [
       {
-        "command": "myExtension.inputCommand",
-        "title": "Input Text"
+        "command": "longAnswerHelper.askQuestion",
+        "title": "Ask a Question"
       }
     ]
   },
