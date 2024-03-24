@@ -3,9 +3,9 @@ import { exec } from 'child_process';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('longAnswerHelper.askQuestion', async () => {
-        const question = await vscode.window.showInputBox({ placeHolder: "Ask anything !" });
+        const question = await vscode.window.showInputBox({ placeHolder: "Ask anything about the repo !" });
         if (question) {
-            getAnswer(question).then(answer => {
+            getAnswer(question, context).then(answer => {
                 showAnswerWebView(context, answer);
             }).catch(error => {
                 vscode.window.showErrorMessage(`Error: ${error}`);
@@ -14,18 +14,29 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 }
 
-function getAnswer(question: string): Promise<string> {
+function getAnswer(question: string, context: vscode.ExtensionContext): Promise<string> {
     return new Promise((resolve, reject) => {
-        exec(`askmonk "${question}"`, (error, stdout, stderr) => {
-            if (error) {
-                reject(`Error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                reject(`Error: ${stderr}`);
-                return;
-            }
-            resolve(stdout.trim());
+        vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Processing your question...",
+            cancellable: false
+        }, (progress, token) => {
+            return new Promise<void>((resolveProgress, rejectProgress) => {
+                exec(`askmonk "${question}"`, (error, stdout, stderr) => {
+                    if (error) {
+                        rejectProgress();
+                        reject(`Error: ${error.message}`);
+                        return;
+                    }
+                    if (stderr) {
+                        rejectProgress();
+                        reject(`Error: ${stderr}`);
+                        return;
+                    }
+                    resolveProgress();
+                    resolve(stdout.trim());
+                });
+            });
         });
     });
 }
@@ -37,6 +48,9 @@ function showAnswerWebView(context: vscode.ExtensionContext, answer: string) {
         vscode.ViewColumn.One, // Editor column to show the new webview panel in.
         {} // Webview options. More on these later.
     );
+	panel.webview.options = {
+		enableScripts: true,
+	};
 
     panel.webview.html = getWebviewContent(answer);
 }
@@ -50,7 +64,7 @@ function getWebviewContent(answer: string) {
     <title>Monk Says</title>
 </head>
 <body>
-    <p>${answer}</p>
+    ${answer}
 </body>
 </html>`;
 }
