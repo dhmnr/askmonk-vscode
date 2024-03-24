@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('longAnswerHelper.askQuestion', async () => {
-        const question = await vscode.window.showInputBox({ placeHolder: "Ask a question" });
+        const question = await vscode.window.showInputBox({ placeHolder: "Ask anything !" });
         if (question) {
             getAnswer(question).then(answer => {
                 showAnswerWebView(context, answer);
@@ -47,7 +47,7 @@ function getWebviewContent(answer: string) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer</title>
+    <title>Monk Says</title>
 </head>
 <body>
     <p>${answer}</p>

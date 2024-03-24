@@ -14,27 +14,10 @@
     "onView:longAnswerHelperView"
   ],
   "contributes": {
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "longAnswerHelper",
-          "title": "Long Answer Helper",
-          "icon": "images/book-icon.svg"
-        }
-      ]
-    },
-    "views": {
-      "longAnswerHelper": [
-        {
-          "id": "longAnswerHelperView",
-          "name": "Long Answer Helper"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "longAnswerHelper.askQuestion",
-        "title": "Ask a Question"
+        "title": "Ask Monk : Your learning bot"
       }
     ]
   },
